@@ -75,7 +75,9 @@ public final class SGSegmentedProgressView: UIView {
         stackView.distribution = .fillEqually
         stackView.spacing = paddingBetweenSegments
         segments.forEach(stackView.addArrangedSubview(_:))
-        
+    }
+    
+    public func setupStackViewLayout() {
         addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
