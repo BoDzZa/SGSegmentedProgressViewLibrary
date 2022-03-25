@@ -5,15 +5,14 @@
 //  Created by Sanjeev Gautam on 07/11/20.
 //
 
-import Foundation
 import UIKit
 
 public final class SGSegmentedProgressView: UIView {
     
-    private weak var delegate: SGSegmentedProgressViewDelegate?
-    private weak var dataSource: SGSegmentedProgressViewDataSource?
+    weak var delegate: SGSegmentedProgressViewDelegate?
+    weak var dataSource: SGSegmentedProgressViewDataSource?
     
-    private var numberOfSegments: Int { get { return self.dataSource?.numberOfSegments ?? 0 } }
+    private var numberOfSegments: Int { get { return self.dataSource?.numberOfSegments ?? .zero } }
     private var segmentDuration: TimeInterval { get { return self.dataSource?.segmentDuration ?? 5 } }
     private var paddingBetweenSegments: CGFloat { get { return self.dataSource?.paddingBetweenSegments ?? 5 } }
     private var trackColor: UIColor { get { return self.dataSource?.trackColor ?? UIColor.red.withAlphaComponent(0.3) } }
@@ -32,42 +31,27 @@ public final class SGSegmentedProgressView: UIView {
         return (1/PROGRESS_SPEED)
     }
     
+    private var stackView = UIStackView()
+    
     // MARK:- Properties
     public private (set) var isPaused: Bool = false
-    public private (set) var currentIndex: Int = 0
+    public private (set) var currentIndex: Int = .zero
 
     // MARK:- Initializer
     internal required init(coder aDecoder: NSCoder) {
         fatalError("This class does not support NSCoding")
     }
     
-    public init(frame: CGRect, delegate: SGSegmentedProgressViewDelegate, dataSource: SGSegmentedProgressViewDataSource) {
-        super.init(frame : frame)
-        
-        self.delegate = delegate
-        self.dataSource = dataSource
+    override init(frame: CGRect = .zero) {
+        super.init(frame: frame)
         
         self.drawSegments()
     }
     
     // MARK:- Private
     private func drawSegments() {
-        
-        let remainingWidth = self.frame.size.width - (self.paddingBetweenSegments * CGFloat(self.numberOfSegments-1))
-        let widthOfSegment = remainingWidth/CGFloat(self.numberOfSegments)
-        let heightOfSegment = self.frame.size.height
-        
-        var originX: CGFloat = 0
-        let originY: CGFloat = 0
-        
-        for index in 0..<self.numberOfSegments {
-            originX = (CGFloat(index) * widthOfSegment) + (CGFloat(index) * self.paddingBetweenSegments)
-            
-            let frame = CGRect(x: originX, y: originY, width: widthOfSegment, height: heightOfSegment)
+        for index in .zero..<self.numberOfSegments {
             let progressView = self.createProgressView()
-            progressView.frame = frame
-            progressView.transform = CGAffineTransform(scaleX: 1.0, y: heightOfSegment)
-            self.addSubview(progressView)
             self.segments.append(progressView)
             
             if let cornerType = self.dataSource?.roundCornerType {
@@ -75,7 +59,7 @@ public final class SGSegmentedProgressView: UIView {
                 case .roundCornerSegments(let cornerRadious):
                     progressView.borderAndCorner(cornerRadious: cornerRadious, borderWidth: 0, borderColor: nil)
                 case .roundCornerBar(let cornerRadious):
-                    if index == 0 {
+                    if index == .zero {
                         progressView.roundCorners(corners: [.topLeft, .bottomLeft], radius: cornerRadious)
                     } else if index == self.numberOfSegments-1 {
                         progressView.roundCorners(corners: [.topRight, .bottomRight], radius: cornerRadious)
@@ -85,11 +69,25 @@ public final class SGSegmentedProgressView: UIView {
                 }
             }
         }
+        
+        stackView.alignment = .fill
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        stackView.spacing = paddingBetweenSegments
+        segments.forEach(stackView.addArrangedSubview(_:))
+        
+        addSubview(stackView)
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        stackView.topAnchor.constraint(equalTo: self.topAnchor, constant: .zero).isActive = true
+        stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: .zero).isActive = true
+        stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: .zero).isActive = true
+        stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: .zero).isActive = true
     }
     
     private func createProgressView() -> UIProgressView {
         let progressView = UIProgressView(progressViewStyle: .bar)
-        progressView.setProgress(0, animated: false)
+        progressView.setProgress(.zero, animated: false)
         progressView.trackTintColor = self.trackColor
         progressView.tintColor = self.progressColor
         return progressView
@@ -127,7 +125,7 @@ public final class SGSegmentedProgressView: UIView {
                     self.currentIndex = self.currentIndex + 1
                     
                     let progressView = self.segments[self.currentIndex]
-                    progressView.setProgress(0, animated: false)
+                    progressView.setProgress(.zero, animated: false)
                     
                 } else {
                     self.timer?.invalidate()
@@ -176,16 +174,16 @@ public final class SGSegmentedProgressView: UIView {
     
     public func previousSegment() {
         
-        if self.currentIndex > 0 {
+        if self.currentIndex > .zero {
             self.isPaused = true
             
             let currentProgressView = self.segments[self.currentIndex]
-            currentProgressView.setProgress(0, animated: false)
+            currentProgressView.setProgress(.zero, animated: false)
             
             self.currentIndex = self.currentIndex - 1
             
             let progressView = self.segments[self.currentIndex]
-            progressView.setProgress(0, animated: false)
+            progressView.setProgress(.zero, animated: false)
             
             self.isPaused = false
             
@@ -201,7 +199,7 @@ public final class SGSegmentedProgressView: UIView {
         self.isPaused = true
         
         let currentProgressView = self.segments[self.currentIndex]
-        currentProgressView.setProgress(0, animated: false)
+        currentProgressView.setProgress(.zero, animated: false)
         
         self.isPaused = false
         
@@ -218,19 +216,19 @@ public final class SGSegmentedProgressView: UIView {
         self.timer?.invalidate()
         self.timer = nil
         
-        for index in 0..<numberOfSegments {
+        for index in .zero..<numberOfSegments {
             let progressView = self.segments[index]
-            progressView.setProgress(0, animated: false)
+            progressView.setProgress(.zero, animated: false)
         }
         
-        self.currentIndex = 0
+        self.currentIndex = .zero
         self.isPaused = false
     }
     
     // MARK:- Set Progress Manually
     public func setProgressManually(index: Int, progressPercentage: CGFloat) {
         
-        if index < self.segments.count && index >= 0 {
+        if index < self.segments.count && index >= .zero {
             self.timer?.invalidate()
             self.timer = nil
             

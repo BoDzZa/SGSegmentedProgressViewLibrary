@@ -12,14 +12,14 @@
 //  Created by Sanjeev Gautam on 27/05/20.
 //  Copyright © 2020 SG. All rights reserved.
 //
-import Foundation
+
 import UIKit
 
-public protocol SGSegmentedProgressViewDelegate: class {
+public protocol SGSegmentedProgressViewDelegate: AnyObject {
     func segmentedProgressViewFinished(finishedIndex: Int, isLastIndex: Bool)
 }
 
-public protocol SGSegmentedProgressViewDataSource: class {
+public protocol SGSegmentedProgressViewDataSource: AnyObject {
     var numberOfSegments: Int { get }
     var segmentDuration: TimeInterval { get }
     var paddingBetweenSegments: CGFloat { get }
