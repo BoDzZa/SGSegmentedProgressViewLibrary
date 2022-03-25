@@ -78,15 +78,21 @@ public final class SGSegmentedProgressView: UIView {
     }
     
     public func setupStackViewLayout() {
+        guard let superview = superview else {
+            return
+        }
+        
         addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
-        stackView.topAnchor.constraint(equalTo: self.topAnchor, constant: .zero).isActive = true
-        stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: .zero).isActive = true
-        stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: .zero).isActive = true
-        stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: .zero).isActive = true
+        let constraints = [
+            stackView.topAnchor.constraint(equalTo: superview.topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: superview.bottomAnchor),
+            stackView.leadingAnchor.constraint(equalTo: superview.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: superview.trailingAnchor)
+        ]
+        NSLayoutConstraint.activate(constraints)
         
-        setNeedsLayout()
         layoutIfNeeded()
     }
     
