@@ -38,13 +38,15 @@ public final class SGSegmentedProgressView: UIView {
     public private (set) var currentIndex: Int = .zero
 
     // MARK:- Initializer
-    internal required init(coder aDecoder: NSCoder) {
-        fatalError("This class does not support NSCoding")
-    }
-    
     override init(frame: CGRect = .zero) {
         super.init(frame: frame)
         
+        self.drawSegments()
+    }
+    
+    internal required init?(coder: NSCoder) {
+        super.init(coder: coder)
+
         self.drawSegments()
     }
     
