@@ -9,8 +9,8 @@ import UIKit
 
 public final class SGSegmentedProgressView: UIView {
     
-    weak var delegate: SGSegmentedProgressViewDelegate?
-    weak var dataSource: SGSegmentedProgressViewDataSource?
+    public weak var delegate: SGSegmentedProgressViewDelegate?
+    public weak var dataSource: SGSegmentedProgressViewDataSource?
     
     private var numberOfSegments: Int { get { return self.dataSource?.numberOfSegments ?? .zero } }
     private var segmentDuration: TimeInterval { get { return self.dataSource?.segmentDuration ?? 5 } }
