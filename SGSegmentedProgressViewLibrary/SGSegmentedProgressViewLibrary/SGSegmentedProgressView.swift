@@ -18,7 +18,7 @@ public final class SGSegmentedProgressView: UIView {
     private var trackColor: UIColor { get { return self.dataSource?.trackColor ?? UIColor.red.withAlphaComponent(0.3) } }
     private var progressColor: UIColor { get { return self.dataSource?.progressColor ?? UIColor.red } }
     
-    private var segments = [UIProgressView]()
+    private(set) var segments = [UIProgressView]()
     private var timer: Timer?
     
     private let PROGRESS_SPEED: Double = 1000
@@ -40,18 +40,13 @@ public final class SGSegmentedProgressView: UIView {
     // MARK:- Initializer
     override init(frame: CGRect = .zero) {
         super.init(frame: frame)
-        
-        self.drawSegments()
     }
     
     internal required init?(coder: NSCoder) {
         super.init(coder: coder)
-
-        self.drawSegments()
     }
     
-    // MARK:- Private
-    private func drawSegments() {
+    public func drawSegments() {
         for index in .zero..<self.numberOfSegments {
             let progressView = self.createProgressView()
             self.segments.append(progressView)
@@ -97,6 +92,8 @@ public final class SGSegmentedProgressView: UIView {
         
         layoutIfNeeded()
     }
+    
+    // MARK:- Private
     
     private func createProgressView() -> UIProgressView {
         let progressView = UIProgressView(progressViewStyle: .bar)
