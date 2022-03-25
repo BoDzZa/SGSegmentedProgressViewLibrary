@@ -85,6 +85,9 @@ public final class SGSegmentedProgressView: UIView {
         stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: .zero).isActive = true
         stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: .zero).isActive = true
         stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: .zero).isActive = true
+        
+        setNeedsLayout()
+        layoutIfNeeded()
     }
     
     private func createProgressView() -> UIProgressView {
